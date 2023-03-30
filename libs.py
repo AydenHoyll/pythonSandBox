@@ -1,12 +1,16 @@
 import re
 import nltk
 
-def find_verb_wh(file_path):
+def normalize_tokenize_tag(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()   
+        text = file.read()
     # turn each word into individual unit of an array/list and normalizes text
     tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
     tagged = nltk.pos_tag(tokens)
+    return tagged
+
+def find_verb_wh(file_path):
+    tagged = normalize_tokenize_tag(file_path)
     verb_wh = []
     for i in range(len(tagged) - 1):
         word1, tag1 = tagged[i]
@@ -26,14 +30,8 @@ def count_sentences(file_path):
     return num_sentences
 
 def find_vb_that_pairs(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()    
+    tagged = normalize_tokenize_tag(file_path)
 
-    # turn each word into individual unit of an array/list
-    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
-    
-    # find parts of speech
-    tagged = nltk.pos_tag(tokens)
     vb_that = []
 
     for i in range(len(tagged) - 1):
@@ -46,16 +44,11 @@ def find_vb_that_pairs(file_path):
     return vb_that
 
 def find_attributive_adjectives(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()    
-
-    # turn each word into individual unit of an array/list
-    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
-
-    # find parts of speech
-    tagged = nltk.pos_tag(tokens)
+    
+    tagged = normalize_tokenize_tag(file_path)
 
     attrib_adjs = []
+
     for i in range(1, len(tagged)):
         if tagged[i][1] == 'JJ' and tagged[i-1][1] in ['NN', 'NNS', 'NNP', 'NNPS']:
             attrib_adjs.append(tagged[i][0])
@@ -69,10 +62,7 @@ def find_prepositional_phrases(file_path):
     # Create a chunking grammar with the preposition pattern
     chunking_grammar = r'''PP: {<%s> <DT>? <NN.*>+}''' % preposition_pattern
 
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()   
-    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
-    tagged = nltk.pos_tag(tokens)
+    tagged = normalize_tokenize_tag(file_path)
 
     # Create a chunk parser
     chunk_parser = nltk.RegexpParser(chunking_grammar)
