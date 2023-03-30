@@ -3,16 +3,11 @@ import nltk
 
 def find_verb_wh(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        file_contents = file.read()
-        text = file_contents
-        normalized_text = re.sub(r'[^a-zA-Z\s]', '', text)
-    # turn each word into individual unit of an array/list
-    tokens = nltk.word_tokenize(normalized_text)
-    # find parts of speech
+        text = file.read()   
+    # turn each word into individual unit of an array/list and normalizes text
+    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
     tagged = nltk.pos_tag(tokens)
-
     verb_wh = []
-
     for i in range(len(tagged) - 1):
         word1, tag1 = tagged[i]
         word2, tag2 = tagged[i+1]
@@ -24,8 +19,7 @@ def find_verb_wh(file_path):
 
 def count_sentences(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        file_contents = file.read()
-        text = file_contents
+        text = file.read()
     sentences = nltk.sent_tokenize(text)
     num_sentences = len(sentences)
     print('Number of sentences:', num_sentences)
@@ -33,14 +27,13 @@ def count_sentences(file_path):
 
 def find_vb_that_pairs(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        file_contents = file.read()
-        text = file_contents
-        normalized_text = re.sub(r'[^a-zA-Z\s]', '', text)
+        text = file.read()    
+
     # turn each word into individual unit of an array/list
-    tokens = nltk.word_tokenize(normalized_text)
+    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
+    
     # find parts of speech
     tagged = nltk.pos_tag(tokens)
-
     vb_that = []
 
     for i in range(len(tagged) - 1):
@@ -54,13 +47,14 @@ def find_vb_that_pairs(file_path):
 
 def find_attributive_adjectives(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        file_contents = file.read()
-        text = file_contents
-        normalized_text = re.sub(r'[^a-zA-Z\s]', '', text)
+        text = file.read()    
+
     # turn each word into individual unit of an array/list
-    tokens = nltk.word_tokenize(normalized_text)
+    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
+
     # find parts of speech
     tagged = nltk.pos_tag(tokens)
+
     attrib_adjs = []
     for i in range(1, len(tagged)):
         if tagged[i][1] == 'JJ' and tagged[i-1][1] in ['NN', 'NNS', 'NNP', 'NNPS']:
@@ -76,10 +70,8 @@ def find_prepositional_phrases(file_path):
     chunking_grammar = r'''PP: {<%s> <DT>? <NN.*>+}''' % preposition_pattern
 
     with open(file_path, 'r', encoding='utf-8') as file:
-        file_contents = file.read()
-        text = file_contents
-        normalized_text = re.sub(r'[^a-zA-Z\s]', '', text)
-    tokens = nltk.word_tokenize(normalized_text)
+        text = file.read()   
+    tokens = [token for token in nltk.word_tokenize(text) if token.isalpha()]
     tagged = nltk.pos_tag(tokens)
 
     # Create a chunk parser
