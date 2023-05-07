@@ -13,7 +13,7 @@ def normalize_tokenize_tag(file_path):
     return tagged
 
 def find_verb_wh(file_path):
-    """look for verb + wh clause"""
+    """search for verb + wh clause"""
     tagged = normalize_tokenize_tag(file_path)
     verb_wh = []
     for i in range(len(tagged) - 1):
@@ -37,7 +37,7 @@ def count_sentences(file_path):
     return num_sentences
 
 def find_vb_that_pairs(file_path):
-    """get verb +that-clause"""
+    """search for verb +that-clause"""
     tagged = normalize_tokenize_tag(file_path)
 
     vb_that = []
@@ -52,7 +52,7 @@ def find_vb_that_pairs(file_path):
     return vb_that
 
 def find_attributive_adjectives(file_path):
-    """find all attr adjectives"""
+    """search for all attr adjectives"""
     tagged = normalize_tokenize_tag(file_path)
 
     attrib_adjs = []
@@ -64,7 +64,7 @@ def find_attributive_adjectives(file_path):
     return attrib_adjs
 
 def find_prepositional_phrases(file_path):
-    """find all PP"""
+    """search for all PP"""
     # Preposition pattern
     preposition_pattern = 'IN|TO|OF|WITH|FOR|ON|AT|FROM|BY|ABOUT'
 
@@ -83,7 +83,7 @@ def find_prepositional_phrases(file_path):
     prepositional_phrases = []
     for subtree in parsed.subtrees(filter=lambda t: t.label() == 'PP'):
         prepositional_phrases.append(' '.join(word for word, tag in subtree.leaves()))
-    print('Number of prep phrases:', len(prepositional_phrases))
+    print('Number of prep phrases:', len(prepositional_phrases), prepositional_phrases)
     return prepositional_phrases
 
 def isPassive(sentence):
@@ -112,7 +112,7 @@ def isPassive(sentence):
             verbspos = [i for i in range(len(tagschunk)) if tagschunk[i].startswith('V')] 
             if verbspos != []:                                                            
                 for i in verbspos:
-                    if sentchunk[i].lower() not in beforms and sentchunk[i].lower() not in aux: 
+                    if sentchunk[i].lower() not in beforms and sentchunk[i].lower() not in aux:
                         break
                 else:
                     return True
@@ -128,5 +128,6 @@ def passiveVoiceFinder(file_path):
         if isPassive(sent):
             passiveVoiceArr.append(sent)
         # print(sent + '--> %s' % isPassive(sent))
-    print(file_path,'pvoice:', len(passiveVoiceArr))
+    print(file_path,'pvoice:', len(passiveVoiceArr), passiveVoiceArr)
     return passiveVoiceArr
+
